@@ -1,0 +1,24 @@
+name: Iran Stock Signal Bot
+
+on:
+  schedule:
+    - cron: '0 10,13 * * 1-4'  # ساعت ۱۰ و ۱۳ روزهای شنبه تا چهارشنبه
+  workflow_dispatch:            # برای اجرای دستی
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install libraries
+        run: |
+          pip install --upgrade pip
+          pip install requests pandas pandas_ta ccxt
+      - name: Run bot
+        run: python main.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
